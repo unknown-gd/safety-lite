@@ -1,6 +1,6 @@
 [plugin]
 name = "safety-lite"
-author = "Unknown Developer"
+author = "Vurv & Unknown Developer"
 version = "0.1.0"
 language = "lua"
 version_required = "1.2.4"
