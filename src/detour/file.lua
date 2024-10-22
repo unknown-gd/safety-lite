@@ -1,12 +1,28 @@
-local d_Write = file.Write
 local d_SysTime = SysTime
-local d_Read = file.Read
+local d_Open = file.Open
 local d_type = type
 local pairs = pairs
 
 local lastRemove = 0
 local trashBin = {}
 local counter = 0
+
+local function Read( filename, path )
+	local f = d_Open( filename, "rb", path )
+	if f then
+		return f:Read( f:Size() ) or "", f:Close()
+	end
+
+	return ""
+end
+
+local function Write( filename, contents )
+	local f = d_Open( filename, "wb", "DATA" )
+	if f then
+		f:Write( contents )
+		f:Close()
+	end
+end
 
 local sysTime = 0
 
@@ -33,14 +49,14 @@ _G.file.Delete = Detour.attach(file.Delete, function(hk, name)
 		Log( 2, "Someone tried to delete too many files at once! [%s]", name )
 
 		for filePath, content in pairs( trashBin ) do
-			d_Write( filePath, content )
+			Write( filePath, content )
 			trashBin[ filePath ] = nil
 		end
 
 		return nil
 	end
 
-	trashBin[ name ] = d_Read( name, "DATA" )
+	trashBin[ name ] = Read( name, "DATA" )
 	lastRemove = sysTime
 	return hk( name )
 end)
