@@ -20,6 +20,7 @@ end
 
 local color_white = { 199, 199, 199 }
 local color_logo = { 186, 230, 126 }
+local log = Autorun.log
 
 ---@param urgency number
 ---@param fmt string
@@ -30,13 +31,13 @@ function Log(urgency, fmt, ...)
 	end
 
 	-- Atrocious debug.getinfo spam
-	Autorun.log( d_format(fmt, ...) .. " -> " .. ( getLocation(6) or getLocation(5) or getLocation(4) or getLocation(3) or getLocation(2) ), urgency )
+	log( d_format(fmt, ...) .. " -> " .. ( getLocation(6) or getLocation(5) or getLocation(4) or getLocation(3) or getLocation(2) ), urgency )
 	return nil
 end
 
 --- Startup
 Log( 3, d_format( "Safety-Lite %s by %s\n", Autorun.Plugin.VERSION, Autorun.Plugin.AUTHOR ) )
-Log( 3, d_format( "Connected to %s ( %s )", GetConVar("hostname"):GetString(), Autorun.IP ) )
+Log( 3, d_format( "Connected to %s ( %s )", GetHostName(), Autorun.IP ) )
 
 if Settings.WhitelistedIPs[ Autorun.IP ] then
 	Log( 3, "IP is whitelisted: " .. Autorun.IP .. " startup aborted." )
@@ -70,6 +71,5 @@ require("detour/net")
 require("detour/os")
 require("detour/registry")
 require("detour/string")
-require("detour/table")
 
 SAFETY_MEMUSED = d_collectgarbage("count")
